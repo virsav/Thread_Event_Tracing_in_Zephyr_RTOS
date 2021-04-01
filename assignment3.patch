@@ -1,5 +1,5 @@
 diff -Naur ./old_zephyr/include/tracing.h ./zephyr/include/tracing.h
---- ./old_zephyr/include/tracing.h	2021-01-26 18:48:38.846291000 -0800
+--- ./old_zephyr/include/tracing.h	2021-04-01 00:06:36.553785147 -0700
 +++ ./zephyr/include/tracing.h	2021-03-28 19:42:37.234923011 -0700
 @@ -36,6 +36,9 @@
  #elif defined CONFIG_TRACING_CTF
@@ -57,8 +57,8 @@ diff -Naur ./old_zephyr/samples/trace_app/runall ./zephyr/samples/trace_app/runa
 \ No newline at end of file
 diff -Naur ./old_zephyr/samples/trace_app/src/main.c ./zephyr/samples/trace_app/src/main.c
 --- ./old_zephyr/samples/trace_app/src/main.c	1969-12-31 16:00:00.000000000 -0800
-+++ ./zephyr/samples/trace_app/src/main.c	2021-03-31 22:43:06.924887331 -0700
-@@ -0,0 +1,187 @@
++++ ./zephyr/samples/trace_app/src/main.c	2021-04-01 00:07:53.840975132 -0700
+@@ -0,0 +1,179 @@
 +#include <logging/log.h>
 +#include <kernel.h>
 +#include <asm_inline_gcc.h>
@@ -124,20 +124,12 @@ diff -Naur ./old_zephyr/samples/trace_app/src/main.c ./zephyr/samples/trace_app/
 +	//Get the Task struct for Thread
 +	struct Tasks* threads_task = (struct Tasks*)a;
 +
-+	//Get Thread name
-+	const char *t_name = k_thread_name_get(k_current_get());
-+	DPRINTK("Thread %s started\n", threads_task->t_name);
-+
 +	volatile uint64_t n;
 +	int iteration_num;
-+	int num = 0;
-+
-+	uint64_t tsc_start = rdtsc();
 +
 +	while(1){
 +
 +		//Num of task iteration
-+		DPRINTK("%s , iter %d\n", threads_task->t_name, num++);
 +		iteration_num = 0;
 +
 +		//Compute 1
@@ -357,7 +349,7 @@ diff -Naur ./old_zephyr/samples/trace_app/vcd_generator.py ./zephyr/samples/trac
 +                    output.write('1' + threads[line.split(' ')[2]] + '\n')
 \ No newline at end of file
 diff -Naur ./old_zephyr/subsys/debug/Kconfig ./zephyr/subsys/debug/Kconfig
---- ./old_zephyr/subsys/debug/Kconfig	2021-01-26 18:48:39.290292000 -0800
+--- ./old_zephyr/subsys/debug/Kconfig	2021-04-01 00:06:36.557785365 -0700
 +++ ./zephyr/subsys/debug/Kconfig	2021-03-28 20:07:09.357660335 -0700
 @@ -271,6 +271,13 @@
  	  Enable POSIX backend for CTF tracing. It will output the CTF stream to a
@@ -374,7 +366,7 @@ diff -Naur ./old_zephyr/subsys/debug/Kconfig ./zephyr/subsys/debug/Kconfig
  source "subsys/debug/Kconfig.segger"
  
 diff -Naur ./old_zephyr/subsys/debug/tracing/CMakeLists.txt ./zephyr/subsys/debug/tracing/CMakeLists.txt
---- ./old_zephyr/subsys/debug/tracing/CMakeLists.txt	2021-01-26 18:48:39.290292000 -0800
+--- ./old_zephyr/subsys/debug/tracing/CMakeLists.txt	2021-04-01 00:06:36.561785582 -0700
 +++ ./zephyr/subsys/debug/tracing/CMakeLists.txt	2021-03-28 00:24:29.168043756 -0700
 @@ -13,4 +13,9 @@
    cpu_stats.c
